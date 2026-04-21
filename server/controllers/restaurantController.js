@@ -16,7 +16,7 @@ exports.getRestaurants = async (req, res) => {
     let query = {};
 
     if (city) {
-      query.city = city;
+      query.city = { $regex: city, $options: 'i' };
     }
 
     if (name) {
