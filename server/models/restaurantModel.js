@@ -9,6 +9,11 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  veganLevel: {
+    type: String,
+    enum: ['Fully Vegan', 'Vegan Friendly', 'Has Options'],
+    required: true
+  },
   googleMapsUrl: {
     type: String,
     required: true

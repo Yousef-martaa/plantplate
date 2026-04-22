@@ -11,7 +11,7 @@ exports.createRestaurant = async (req, res) => {
 
 exports.getRestaurants = async (req, res) => {
   try {
-    const { city, name } = req.query;
+    const { city, name, veganLevel } = req.query;
 
     let query = {};
 
@@ -21,6 +21,10 @@ exports.getRestaurants = async (req, res) => {
 
     if (name) {
       query.name = { $regex: name, $options: 'i' };
+    }
+
+    if (veganLevel) {
+      query.veganLevel = veganLevel;
     }
 
     const restaurants = await Restaurant.find(query);
