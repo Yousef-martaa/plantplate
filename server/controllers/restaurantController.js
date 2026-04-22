@@ -62,3 +62,15 @@ exports.deleteRestaurant = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getTopRated = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find()
+      .sort({ rating: -1 })
+      .limit(5);
+
+    res.json(restaurants);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
