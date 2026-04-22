@@ -80,6 +80,7 @@ function App() {
           <h3>{r.name}</h3>
           <p>{r.city}</p>
           <p>RATE: {r.rating}</p>
+          <p>{r.googleMapsUrl}</p>
         </div>
       ))}
     </div>
