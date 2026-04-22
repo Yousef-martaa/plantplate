@@ -11,8 +11,8 @@ const {
 
 router.post('/restaurants', createRestaurant);
 router.get('/restaurants', getRestaurants);
-router.put('/restaurants/:index', updateRestaurant);
-router.delete('/restaurants/:index', deleteRestaurant);
+router.put('/restaurants/:id', updateRestaurant);
+router.delete('/restaurants/:id', deleteRestaurant);
 router.get('/restaurants/top', getTopRated);
 
 module.exports = router;
