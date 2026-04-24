@@ -18,7 +18,14 @@ const reviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
     required: true
-  }
+  },
+  userId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User',
+  required: true
+}
+  
 });
+
 
 module.exports = mongoose.model('Review', reviewSchema);

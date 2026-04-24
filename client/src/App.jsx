@@ -10,6 +10,8 @@ function App() {
   const [rating, setRating] = useState('');
   const [googleMapsUrl, setGoogleMapsUrl] = useState('');
 
+  const [reviews, setReviews] = useState({});
+
   useEffect(() => {
     fetch('http://localhost:3000/api/restaurants')
       .then(res => res.json())
@@ -27,9 +29,10 @@ function App() {
       name,
       city,
       veganLevel,
-      rating: Number(rating), 
+      rating: Number(rating),
       googleMapsUrl
     };
+
 
     const res = await fetch('http://localhost:3000/api/restaurants', {
       method: 'POST',
@@ -48,6 +51,19 @@ function App() {
     setVeganLevel('');
     setRating('');
     setGoogleMapsUrl('');
+  };
+
+
+  const fetchReviews = async (restaurantId) => {
+    if (reviews[restaurantId]) return;
+    
+    const res = await fetch(`http://localhost:3000/api/reviews?restaurantId=${restaurantId}`);
+    const data = await res.json();
+
+    setReviews(prev => ({
+      ...prev,
+      [restaurantId]: data
+    }));
   };
 
   return (
@@ -102,6 +118,16 @@ function App() {
           <a href={r.googleMapsUrl} target="_blank" rel="noreferrer">
             View on Maps
           </a>
+          <button onClick={() => fetchReviews(r._id)}>
+            Show Reviews
+          </button>
+
+          {reviews[r._id] && reviews[r._id].map(review => (
+            <div key={review._id} style={{ marginLeft: '20px' }}>
+              <p><strong>{review.name}</strong>: {review.comment}</p>
+              <p>Rating: {review.rating}</p>
+            </div>
+          ))}
         </div>
       ))}
     </div>
