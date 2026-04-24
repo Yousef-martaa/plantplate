@@ -14,14 +14,20 @@ function App() {
 
   const [reviews, setReviews] = useState({});
 
+  const [error, setError] = useState('');
+
   const fetchRestaurants = () => {
     fetch('http://localhost:3000/api/restaurants')
       .then(res => res.json())
       .then(data => {
         setRestaurants(data);
         setLoading(false);
+        setError('');
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        setError('Failed to load restaurants');
+      });
   };
 
   useEffect(() => {
@@ -112,8 +118,9 @@ function App() {
   return (
     <div>
       <h1>PlantPlat - Vegan Restaurants Finder</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {loading && <p>Loading...</p>}
+      {loading && !error && <p>Loading...</p>}
 
       <RestaurantForm
         name={name}
