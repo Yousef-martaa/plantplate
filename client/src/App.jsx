@@ -56,7 +56,7 @@ function App() {
 
   const fetchReviews = async (restaurantId) => {
     if (reviews[restaurantId]) return;
-    
+
     const res = await fetch(`http://localhost:3000/api/reviews?restaurantId=${restaurantId}`);
     const data = await res.json();
 
@@ -64,6 +64,44 @@ function App() {
       ...prev,
       [restaurantId]: data
     }));
+  };
+
+  const deleteRestaurant = async (id) => {
+    await fetch(`http://localhost:3000/api/restaurants/${id}`, {
+      method: 'DELETE'
+    });
+
+    setRestaurants(restaurants.filter(r => r._id !== id));
+  };
+
+  const updateRestaurant = async (id) => {
+    const newName = prompt("Enter new name");
+    const newCity = prompt("Enter new city");
+    const newVeganLevel = prompt("Enter vegan level");
+    const newRating = prompt("Enter rating");
+    const newUrl = prompt("Enter Google Maps URL");
+
+    const updatedData = {
+      name: newName,
+      city: newCity,
+      veganLevel: newVeganLevel,
+      rating: Number(newRating),
+      googleMapsUrl: newUrl
+    };
+
+    const res = await fetch(`http://localhost:3000/api/restaurants/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedData)
+    });
+
+    const updated = await res.json();
+
+    setRestaurants(restaurants.map(r =>
+      r._id === id ? updated : r
+    ));
   };
 
   return (
@@ -120,6 +158,14 @@ function App() {
           </a>
           <button onClick={() => fetchReviews(r._id)}>
             Show Reviews
+          </button>
+
+          <button onClick={() => deleteRestaurant(r._id)}>
+            Delete
+          </button>
+
+          <button onClick={() => updateRestaurant(r._id)}>
+            Update
           </button>
 
           {reviews[r._id] && reviews[r._id].map(review => (
