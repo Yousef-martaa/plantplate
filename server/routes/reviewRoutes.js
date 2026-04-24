@@ -31,4 +31,13 @@ router.get('/reviews', async (req, res) => {
   }
 });
 
+router.get('/reviews/user/:userId', async (req, res) => {
+  try {
+    const reviews = await Review.find({ userId: req.params.userId });
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

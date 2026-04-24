@@ -14,7 +14,7 @@ function App() {
 
   const [reviews, setReviews] = useState({});
 
-  useEffect(() => {
+  const fetchRestaurants = () => {
     fetch('http://localhost:3000/api/restaurants')
       .then(res => res.json())
       .then(data => {
@@ -22,6 +22,16 @@ function App() {
         setLoading(false);
       })
       .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchRestaurants();
+
+    const interval = setInterval(() => {
+      fetchRestaurants();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const addRestaurant = async (e) => {
