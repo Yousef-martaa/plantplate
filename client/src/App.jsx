@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import RestaurantForm from './components/RestaurantForm';
 import RestaurantList from './components/RestaurantList';
+import logo from './assets/logo.png';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
@@ -115,12 +116,38 @@ function App() {
     ));
   };
 
-  return (
-    <div>
-      <h1>PlantPlat - Vegan Restaurants Finder</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+ return (
+  <div className="app">
 
-      {loading && !error && <p>Loading...</p>}
+    {/* 🔹 Navbar */}
+<header className="navbar">
+  <div className="brand">
+    <img src={logo} alt="Vägen till Vegan logo" className="brand-logo" />
+  </div>
+
+  <nav className="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Restaurants</a>
+    <a href="#">Reviews</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+    {/* 🔹 Hero */}
+    <section className="hero">
+      <div className="hero-text">
+        <h1>Find your vegan path.</h1>
+        <p>
+          Discover vegan, vegetarian, and plant-friendly restaurants near you.
+        </p>
+      </div>
+    </section>
+
+    {/* 🔹 Main */}
+    <main className="container">
+
+      {error && <p className="error">{error}</p>}
+      {loading && !error && <p className="loading">Loading...</p>}
 
       <RestaurantForm
         name={name}
@@ -143,8 +170,10 @@ function App() {
         updateRestaurant={updateRestaurant}
         reviews={reviews}
       />
-    </div>
-  );
+
+    </main>
+  </div>
+);
 }
 
 export default App;
