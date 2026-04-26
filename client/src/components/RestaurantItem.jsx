@@ -44,9 +44,16 @@ function RestaurantItem({
             restaurantId: r._id,
             email
           })
-        }).then(() => {
-          fetchReviews(r._id);
-        });
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              fetchReviews(r._id);
+            }
+          })
+          .catch(err => console.error(err));
 
       }}>
         Add Review

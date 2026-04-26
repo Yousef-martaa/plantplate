@@ -13,12 +13,13 @@ function UserForm() {
       body: JSON.stringify({ name, email })
     });
 
+    const data = await res.json();
     if (res.ok) {
       alert('User added!');
       setName('');
       setEmail('');
     } else {
-      alert('Error adding user');
+      alert(data.error);
     }
   };
 
