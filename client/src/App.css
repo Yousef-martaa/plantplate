@@ -15,10 +15,10 @@ body {
 .navbar {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 20px 32px;
+  padding: 30px 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .brand-logo {
@@ -42,7 +42,7 @@ body {
 .hero {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 70px 32px 90px;
+  padding: 40px 32px 40px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -50,9 +50,9 @@ body {
 
 .hero-text h1 {
   font-family: Georgia, serif;
-  font-size: 58px;
-  line-height: 1.05;
-  margin: 0 0 22px;
+  font-size: 48px;
+  line-height: 1;
+  margin: 0 0 15px;
   color: #12351d;
 }
 
@@ -65,8 +65,8 @@ body {
 
 .hero::after {
   content: "Good for you. Good for all.";
-  width: 310px;
-  height: 310px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: #123f1f;
   color: white;
@@ -75,9 +75,9 @@ body {
   justify-content: center;
   text-align: center;
   justify-self: center;
-  font-size: 24px;
+  font-size: 16px;
   line-height: 1.4;
-  padding: 30px;
+  padding:20px;
   box-shadow: 0 28px 60px rgba(18, 63, 31, 0.25);
 }
 
@@ -187,7 +187,10 @@ button:hover {
   gap: 10px;
   margin-top: 18px;
 }
-
+.restaurant-card button:last-of-type {
+  width: 100%;
+  margin-top: 12px;
+}
 .map-link {
   background: #f2eadc;
   color: #12351d;

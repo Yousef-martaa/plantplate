@@ -70,7 +70,15 @@ function App() {
   };
 
   const fetchReviews = async (restaurantId) => {
-    if (reviews[restaurantId]) return;
+
+    if (reviews[restaurantId]) {
+      setReviews(prev => {
+        const updated = { ...prev };
+        delete updated[restaurantId];
+        return updated;
+      });
+      return;
+    }
 
     const res = await fetch(`http://localhost:3000/api/reviews?restaurantId=${restaurantId}`);
     const data = await res.json();
@@ -117,66 +125,59 @@ function App() {
     ));
   };
 
- return (
-  <div className="app">
+  return (
+    <div className="app">
 
-    {/* 🔹 Navbar */}
-<header className="navbar">
-  <div className="brand">
-    <img src={logo} alt="Vägen till Vegan logo" className="brand-logo" />
-  </div>
+      {/* 🔹 Navbar */}
+      <header className="navbar">
+        <div className="brand">
+          <img src={logo} alt="Vägen till Vegan logo" className="brand-logo" />
+        </div>
+      </header>
 
-  <nav className="nav-links">
-    <a href="#">Home</a>
-    <a href="#">Restaurants</a>
-    <a href="#">Reviews</a>
-    <a href="#">About</a>
-  </nav>
-</header>
+      {/* 🔹 Hero */}
+      <section className="hero">
+        <div className="hero-text">
+          <h1>Find your vegan path.</h1>
+          <p>
+            Discover vegan, vegetarian, and plant-friendly restaurants near you.
+          </p>
+        </div>
+      </section>
 
-    {/* 🔹 Hero */}
-    <section className="hero">
-      <div className="hero-text">
-        <h1>Find your vegan path.</h1>
-        <p>
-          Discover vegan, vegetarian, and plant-friendly restaurants near you.
-        </p>
-      </div>
-    </section>
+      {/* 🔹 Main */}
+      <main className="container">
 
-    {/* 🔹 Main */}
-    <main className="container">
+        {error && <p className="error">{error}</p>}
+        {loading && !error && <p className="loading">Loading...</p>}
 
-      {error && <p className="error">{error}</p>}
-      {loading && !error && <p className="loading">Loading...</p>}
+        <UserForm />
 
-      <UserForm />
+        <RestaurantForm
+          name={name}
+          setName={setName}
+          city={city}
+          setCity={setCity}
+          veganLevel={veganLevel}
+          setVeganLevel={setVeganLevel}
+          rating={rating}
+          setRating={setRating}
+          googleMapsUrl={googleMapsUrl}
+          setGoogleMapsUrl={setGoogleMapsUrl}
+          onAdd={addRestaurant}
+        />
 
-      <RestaurantForm
-        name={name}
-        setName={setName}
-        city={city}
-        setCity={setCity}
-        veganLevel={veganLevel}
-        setVeganLevel={setVeganLevel}
-        rating={rating}
-        setRating={setRating}
-        googleMapsUrl={googleMapsUrl}
-        setGoogleMapsUrl={setGoogleMapsUrl}
-        onAdd={addRestaurant}
-      />
+        <RestaurantList
+          restaurants={restaurants}
+          fetchReviews={fetchReviews}
+          deleteRestaurant={deleteRestaurant}
+          updateRestaurant={updateRestaurant}
+          reviews={reviews}
+        />
 
-      <RestaurantList
-        restaurants={restaurants}
-        fetchReviews={fetchReviews}
-        deleteRestaurant={deleteRestaurant}
-        updateRestaurant={updateRestaurant}
-        reviews={reviews}
-      />
-
-    </main>
-  </div>
-);
+      </main>
+    </div>
+  );
 }
 
 export default App;
