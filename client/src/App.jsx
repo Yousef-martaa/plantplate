@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import RestaurantForm from './components/RestaurantForm';
 import RestaurantList from './components/RestaurantList';
 import logo from './assets/logo.png';
+import UserForm from './components/UserForm';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
@@ -148,6 +149,8 @@ function App() {
 
       {error && <p className="error">{error}</p>}
       {loading && !error && <p className="loading">Loading...</p>}
+
+      <UserForm />
 
       <RestaurantForm
         name={name}
