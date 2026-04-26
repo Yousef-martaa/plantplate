@@ -42,24 +42,26 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const addRestaurant = async (e) => {
-    e.preventDefault();
+ const addRestaurant = async (e) => {
+  e.preventDefault();
 
-    const newRestaurant = {
-      name,
-      city,
-      veganLevel,
-      rating: Number(rating),
-      googleMapsUrl
-    };
+  const newRestaurant = {
+    name,
+    city,
+    veganLevel,
+    rating: Number(rating),
+    googleMapsUrl
+  };
 
-    const res = await fetch('http://localhost:3000/api/restaurants', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newRestaurant)
-    });
+  const res = await fetch('http://localhost:3000/api/restaurants', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newRestaurant)
+  });
 
-    const data = await res.json();
+  const data = await res.json();
+
+  if (res.ok) {
     setRestaurants([...restaurants, data]);
 
     setName('');
@@ -67,7 +69,10 @@ function App() {
     setVeganLevel('');
     setRating('');
     setGoogleMapsUrl('');
-  };
+  } else {
+    alert(data.error);   // 
+  }
+};
 
   const fetchReviews = async (restaurantId) => {
 
@@ -128,14 +133,14 @@ function App() {
   return (
     <div className="app">
 
-      {/* 🔹 Navbar */}
+      {/* logo */}
       <header className="navbar">
         <div className="brand">
           <img src={logo} alt="Vägen till Vegan logo" className="brand-logo" />
         </div>
       </header>
 
-      {/* 🔹 Hero */}
+      {/* Hero */}
       <section className="hero">
         <div className="hero-text">
           <h1>Find your vegan path.</h1>
@@ -145,7 +150,7 @@ function App() {
         </div>
       </section>
 
-      {/* 🔹 Main */}
+      {/* Main */}
       <main className="container">
 
         {error && <p className="error">{error}</p>}
