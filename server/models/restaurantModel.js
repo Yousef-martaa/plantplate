@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const restaurantSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    minlength: 2
   },
   city: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   veganLevel: {
     type: String,
@@ -21,7 +24,7 @@ const restaurantSchema = new mongoose.Schema({
   rating: {
     type: Number,
     required: true,
-    min: 0,
+    min: 1,
     max: 5
   }
 });

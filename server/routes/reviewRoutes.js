@@ -8,11 +8,20 @@ router.post('/reviews', async (req, res) => {
   try {
     const { name, comment, rating, restaurantId, email } = req.body;
 
+    // check required fields
+    if (!name || !comment || !rating || !restaurantId || !email) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // find user by email
+
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    // create review
 
     const review = new Review({
       name,
@@ -56,5 +65,6 @@ router.get('/reviews/user/:userId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 module.exports = router;
