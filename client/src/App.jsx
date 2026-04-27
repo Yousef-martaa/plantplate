@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import RestaurantForm from './components/RestaurantForm';
 import RestaurantList from './components/RestaurantList';
 import logo from './assets/logo.png';
@@ -20,7 +20,9 @@ function App() {
 
   const [minRating, setMinRating] = useState('');
 
-  const fetchRestaurants = () => {
+  const fetchRestaurants = useCallback(() => {
+    setLoading(true); // start loading before fetch
+
     const url = minRating
       ? `http://localhost:3000/api/restaurants?minRating=${minRating}`
       : `http://localhost:3000/api/restaurants`;
@@ -35,13 +37,26 @@ function App() {
       .catch(err => {
         console.error(err);
         setError('Failed to load restaurants');
+        setLoading(false); // stop loading on error
       });
-  };
+  }, [minRating]);
 
   useEffect(() => {
+    // initial fetch
     fetchRestaurants();
-  }, []);
 
+    const interval = setInterval(() => {
+      fetchRestaurants();
+    }, 5000);
+
+    return () => clearInterval(interval);
+
+  }, []); // run once only
+
+  // refetch when filter changes
+  useEffect(() => {
+    fetchRestaurants();
+  }, [minRating]);
 
   const addRestaurant = async (e) => {
     e.preventDefault();
@@ -53,6 +68,7 @@ function App() {
       rating: Number(rating),
       googleMapsUrl
     };
+
 
     const res = await fetch('http://localhost:3000/api/restaurants', {
       method: 'POST',
@@ -203,8 +219,8 @@ function App() {
 
           <button className="top-btn" onClick={() => {
             fetch('http://localhost:3000/api/restaurants/top?limit=3')
-            .then(res => res.json())
-            .then(data => setRestaurants(data));
+              .then(res => res.json())
+              .then(data => setRestaurants(data));
           }}>
             Show Top 3 Restaurants
           </button>
@@ -217,6 +233,8 @@ function App() {
           deleteRestaurant={deleteRestaurant}
           updateRestaurant={updateRestaurant}
           reviews={reviews}
+          loading={loading}
+          error={error}
         />
 
       </main>

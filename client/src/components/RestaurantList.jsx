@@ -5,8 +5,24 @@ function RestaurantList({
   fetchReviews,
   deleteRestaurant,
   updateRestaurant,
-  reviews
+  reviews,
+  loading,
+  error
 }) {
+  // show loading state
+if (loading) {
+  return <p className="loading">Loading restaurants...</p>;
+}
+
+// show error state
+if (error) {
+  return <p className="error">{error}</p>;
+}
+
+// show empty state
+if (restaurants.length === 0) {
+  return <p>No restaurants found.</p>;
+}
   return (
     <section className="restaurants-section">
       <div className="section-header">
