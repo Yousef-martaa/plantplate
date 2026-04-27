@@ -17,11 +17,13 @@ function App() {
   const [reviews, setReviews] = useState({});
 
   const [error, setError] = useState('');
-
+  const [isTopMode, setIsTopMode] = useState(false);
   const [minRating, setMinRating] = useState('');
 
-  const fetchRestaurants = useCallback(() => {
-    setLoading(true); // start loading before fetch
+  const fetchRestaurants = useCallback((isAuto = false) => {
+
+    // only show loading for manual actions
+    if (!isAuto) setLoading(true);
 
     const url = minRating
       ? `http://localhost:3000/api/restaurants?minRating=${minRating}`
@@ -30,33 +32,37 @@ function App() {
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        setRestaurants(data);
-        setLoading(false);
+
+
+        if (JSON.stringify(data) !== JSON.stringify(restaurants)) {
+          setRestaurants(data);
+        }
+
+        if (!isAuto) setLoading(false);
         setError('');
       })
       .catch(err => {
         console.error(err);
         setError('Failed to load restaurants');
-        setLoading(false); // stop loading on error
+        setLoading(false);
       });
+
   }, [minRating]);
 
-  useEffect(() => {
-    // initial fetch
-    fetchRestaurants();
-
-    const interval = setInterval(() => {
-      fetchRestaurants();
-    }, 5000);
-
-    return () => clearInterval(interval);
-
-  }, []); // run once only
-
-  // refetch when filter changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchRestaurants();
-  }, [minRating]);
+
+    // only auto-refresh if NO filter
+    if (!minRating && !isTopMode) {
+      const interval = setInterval(() => {
+        fetchRestaurants(true); //
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+
+  }, [fetchRestaurants, minRating, isTopMode]);
+
 
   const addRestaurant = async (e) => {
     e.preventDefault();
@@ -202,12 +208,13 @@ function App() {
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === '' || (value >= 1 && value <= 5)) {
+                  setIsTopMode(false); // exit top mode
                   setMinRating(value);
                 }
               }}
             />
 
-            <button onClick={fetchRestaurants}>
+            <button onClick={() => fetchRestaurants(false)}>
               Apply
             </button>
           </div>
@@ -218,6 +225,8 @@ function App() {
 
 
           <button className="top-btn" onClick={() => {
+            setIsTopMode(true); // activate top mode
+
             fetch('http://localhost:3000/api/restaurants/top?limit=3')
               .then(res => res.json())
               .then(data => setRestaurants(data));
