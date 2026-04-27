@@ -143,7 +143,7 @@ function App() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-text">
-          <h1>Find your vegan path.</h1>
+          <h1>Leave the meat. Meet the leaves</h1>
           <p>
             Discover vegan, vegetarian, and plant-friendly restaurants near you.
           </p>

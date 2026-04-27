@@ -2,6 +2,12 @@ const Restaurant = require('../models/restaurantModel');
 
 exports.createRestaurant = async (req, res) => {
   try {
+
+    const { name, city, veganLevel, rating, googleMapsUrl } = req.body;
+    if (!name || !city || !veganLevel || !rating || !googleMapsUrl) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
     const newRestaurant = await Restaurant.create(req.body);
     res.status(201).json(newRestaurant);
   } catch (error) {
@@ -26,6 +32,10 @@ exports.getRestaurants = async (req, res) => {
     if (veganLevel) {
       query.veganLevel = veganLevel;
     }
+    
+    if (req.query.minRating) {
+      query.rating = { $gte: Number(req.query.minRating) };
+    }
 
     const restaurants = await Restaurant.find(query);
 
@@ -35,8 +45,15 @@ exports.getRestaurants = async (req, res) => {
   }
 };
 
+
 exports.updateRestaurant = async (req, res) => {
   try {
+    const { name, city, veganLevel, rating, googleMapsUrl } = req.body;
+
+    if (!name || !city || !veganLevel || !rating || !googleMapsUrl) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       req.params.id,
       req.body,

@@ -67,4 +67,44 @@ router.get('/reviews/user/:userId', async (req, res) => {
 });
 
 
+router.put('/reviews/:id', async (req, res) => {
+  try {
+    const { name, comment, rating } = req.body;
+
+    if (!name || !comment || !rating) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const updated = await Review.findByIdAndUpdate(
+      req.params.id,
+      { name, comment, rating },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    res.json(updated);
+
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.delete('/reviews/:id', async (req, res) => {
+  try {
+    const deleted = await Review.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    res.json({ message: 'Review deleted successfully' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
