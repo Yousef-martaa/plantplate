@@ -18,8 +18,14 @@ function App() {
 
   const [error, setError] = useState('');
 
+  const [minRating, setMinRating] = useState('');
+
   const fetchRestaurants = () => {
-    fetch('http://localhost:3000/api/restaurants')
+    const url = minRating
+      ? `http://localhost:3000/api/restaurants?minRating=${minRating}`
+      : `http://localhost:3000/api/restaurants`;
+
+    fetch(url)
       .then(res => res.json())
       .then(data => {
         setRestaurants(data);
@@ -34,45 +40,40 @@ function App() {
 
   useEffect(() => {
     fetchRestaurants();
-
-    const interval = setInterval(() => {
-      fetchRestaurants();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
- const addRestaurant = async (e) => {
-  e.preventDefault();
 
-  const newRestaurant = {
-    name,
-    city,
-    veganLevel,
-    rating: Number(rating),
-    googleMapsUrl
+  const addRestaurant = async (e) => {
+    e.preventDefault();
+
+    const newRestaurant = {
+      name,
+      city,
+      veganLevel,
+      rating: Number(rating),
+      googleMapsUrl
+    };
+
+    const res = await fetch('http://localhost:3000/api/restaurants', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRestaurant)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setRestaurants([...restaurants, data]);
+
+      setName('');
+      setCity('');
+      setVeganLevel('');
+      setRating('');
+      setGoogleMapsUrl('');
+    } else {
+      alert(data.error);
+    }
   };
-
-  const res = await fetch('http://localhost:3000/api/restaurants', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(newRestaurant)
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    setRestaurants([...restaurants, data]);
-
-    setName('');
-    setCity('');
-    setVeganLevel('');
-    setRating('');
-    setGoogleMapsUrl('');
-  } else {
-    alert(data.error);   // 
-  }
-};
 
   const fetchReviews = async (restaurantId) => {
 
@@ -171,6 +172,44 @@ function App() {
           setGoogleMapsUrl={setGoogleMapsUrl}
           onAdd={addRestaurant}
         />
+
+        <div className="filter-section">
+          <label>Filter by minimum rating (1–5)</label>
+
+          <div className="filter-row">
+            <input
+              type="number"
+              min="1"
+              max="5"
+              placeholder="1–5"
+              value={minRating}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || (value >= 1 && value <= 5)) {
+                  setMinRating(value);
+                }
+              }}
+            />
+
+            <button onClick={fetchRestaurants}>
+              Apply
+            </button>
+          </div>
+        </div>
+
+
+        <div className="top-section">
+
+
+          <button className="top-btn" onClick={() => {
+            fetch('http://localhost:3000/api/restaurants/top?limit=3')
+            .then(res => res.json())
+            .then(data => setRestaurants(data));
+          }}>
+            Show Top 3 Restaurants
+          </button>
+
+        </div>
 
         <RestaurantList
           restaurants={restaurants}

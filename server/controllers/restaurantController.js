@@ -32,7 +32,7 @@ exports.getRestaurants = async (req, res) => {
     if (veganLevel) {
       query.veganLevel = veganLevel;
     }
-    
+
     if (req.query.minRating) {
       query.rating = { $gte: Number(req.query.minRating) };
     }
@@ -88,7 +88,7 @@ exports.getTopRated = async (req, res) => {
   try {
     const restaurants = await Restaurant.find()
       .sort({ rating: -1 })
-      .limit(5);
+      .limit(3);
 
     res.json(restaurants);
   } catch (error) {

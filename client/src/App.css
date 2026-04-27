@@ -243,3 +243,29 @@ button:hover {
     justify-content: center;
   }
 }
+.filter-mini {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-mini input {
+  width: 60px;
+  padding: 6px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.filter-mini button {
+  padding: 6px 12px;
+}
+
+.top-btn {
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1f4d2e, #3a7d44);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
