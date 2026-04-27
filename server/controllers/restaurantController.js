@@ -5,13 +5,14 @@ exports.createRestaurant = async (req, res) => {
 
     const { name, city, veganLevel, rating, googleMapsUrl } = req.body;
     if (!name || !city || !veganLevel || !rating || !googleMapsUrl) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     const newRestaurant = await Restaurant.create(req.body);
     res.status(201).json(newRestaurant);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message }); // validation
+    res.status(500) // unexpected errors
   }
 };
 
@@ -41,7 +42,7 @@ exports.getRestaurants = async (req, res) => {
 
     res.json(restaurants);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -51,7 +52,7 @@ exports.updateRestaurant = async (req, res) => {
     const { name, city, veganLevel, rating, googleMapsUrl } = req.body;
 
     if (!name || !city || !veganLevel || !rating || !googleMapsUrl) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
@@ -61,12 +62,12 @@ exports.updateRestaurant = async (req, res) => {
     );
 
     if (!updatedRestaurant) {
-      return res.status(404).json({ message: 'Restaurant not found' });
+      return res.status(404).json({ error: 'Restaurant not found' });
     }
 
     res.json(updatedRestaurant);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -75,12 +76,12 @@ exports.deleteRestaurant = async (req, res) => {
     const deletedRestaurant = await Restaurant.findByIdAndDelete(req.params.id);
 
     if (!deletedRestaurant) {
-      return res.status(404).json({ message: 'Restaurant not found' });
+      return res.status(404).json({ error: 'Restaurant not found' });
     }
 
     res.json({ message: 'Deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -92,6 +93,6 @@ exports.getTopRated = async (req, res) => {
 
     res.json(restaurants);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
